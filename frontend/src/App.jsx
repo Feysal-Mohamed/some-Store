@@ -11,6 +11,7 @@ import AddProduct from './dashbord/Addproducts'
 import RegisterForm from './components/RegisterForm'
 import LoginForm from './components/LoginForm'
 import ProtectedRoute from './components/protect'
+import CartPage from './pages/Cartpage'
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
       <Route path='/about' element={<About />} />
       <Route path='/blog' element={<Blogs />} />
       <Route path='/shop' element={<Shop />} />
+      <Route path='/cart' element={<CartPage />} />
          <Route
           path='/dash'
           element={

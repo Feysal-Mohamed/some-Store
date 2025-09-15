@@ -4,6 +4,17 @@ import Header from '../components/header';
 
 const Shop = () => {
       const [products, setProducts] = useState([]);
+        const handleLocalStore=(data)=>{
+    
+    const newData=JSON.parse(localStorage.getItem("readData")) || []
+
+    const existId=newData.some((item)=> item._id === data._id)
+    if(!existId){
+      newData.push(data)
+      localStorage.setItem("readData", JSON.stringify(newData))
+
+    }
+  }
     
      useEffect(() => {
         fetch("http://localhost:7000/read/product")
@@ -34,7 +45,7 @@ const Shop = () => {
             <h1>{items.name}</h1>
             <h1><span>{items.status}</span><span>{items.quantity}</span></h1>
             <h1><span>{items.price}$</span><span className='line-through text-gray-300'>344$</span></h1>
-              <button >Add To Cart</button>
+              <button onClick={()=>handleLocalStore(items)} >Add To Cart</button>
        </div>
             </>)
         })

@@ -25,6 +25,7 @@ const Header = () => {
   const firstName = user?.Name ? user.Name.charAt(0).toUpperCase() : "";
 
   return (
+    <>
     <div className="flex justify-between py-4 text-center items-center px-10">
       <div className="text-3xl font-bold">Loogo</div>
 
@@ -56,6 +57,9 @@ const Header = () => {
           <>
            <div className="flex items-center space-x-4">
   {/* User badge */}
+    <NavLink className={`list-none`} to="/cart">
+          <li><i className="fa-solid fa-cart-shopping"></i> Cart</li>
+        </NavLink>
   <div className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-700 text-white font-bold uppercase">
     {firstName}
   </div>
@@ -77,8 +81,10 @@ const Header = () => {
             </button>
           </NavLink>
         )}
+        
       </div>
     </div>
+    </>
   );
 };
 

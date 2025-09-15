@@ -1,10 +1,11 @@
-const Post = require("../Models/postModel"); // adjust path if needed
+const Post = require("../Models/postModel");
 
 // ---------------- Create Post ----------------
 const createPost = async (req, res) => {
   try {
-    const { title, description, image } = req.body;
-
+    const title = req.body?.title;
+    const description = req.body?.description;
+    const image = req.file?.filename;
     if (!title || !description || !image) {
       return res.status(400).json({ message: "All fields are required" });
     }
@@ -51,11 +52,15 @@ const getPostById = async (req, res) => {
 const updatePost = async (req, res) => {
   try {
     const { postId } = req.params;
-    const { title, description, image } = req.body;
+    const { title, description } = req.body;
+    const image = req.file?.filename; // get new uploaded file if exists
+
+    const updatedData = { title, description };
+    if (image) updatedData.image = image; // update image only if new file uploaded
 
     const updatedPost = await Post.findByIdAndUpdate(
       postId,
-      { title, description, image },
+      updatedData,
       { new: true, runValidators: true }
     );
 

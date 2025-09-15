@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import Header from '../components/header'
-import Footer from '../components/Footer'
 // import product from '../../../backend/model/product'
 
 const CartPage = () => {
@@ -77,7 +76,7 @@ const CartPage = () => {
                                             <button onClick={()=> HandleIncrement(items._id)} className='bg-gray-200 px-2 rounded-sm '>+</button>
                                         </div>
                                     </td>
-                                    <td className='pr-24'>${items.price * items.quantity}</td>
+                                    <td className='pr-24'>${items.price }</td>
                                     <td className='pr-24'>${items.price * items.quantity}</td>
                                 </tr>
                             </tbody>
@@ -111,7 +110,6 @@ const CartPage = () => {
 
             </div>
         </div>
-            <Footer />
       
     </div>
   )
