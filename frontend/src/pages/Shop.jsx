@@ -40,13 +40,14 @@ const Shop = () => {
             return (
               <div
                 key={items._id}
-                className="w-[300px] space-y-4 py-2 px-3 rounded-lg border-2"
+                className="mt-16 grid border p-4 rounded-lg shadow-lg w-60"
               >
                 <img
                   className="rounded-xl"
                   src={`http://localhost:7000/AlImages/${items.prImg}`}
                   alt={items.name}
                 />
+                
                 <h1>{items.name}</h1>
                 <h1>
                   <span>{items.status}</span>

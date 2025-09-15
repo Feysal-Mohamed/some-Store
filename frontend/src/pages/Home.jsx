@@ -62,6 +62,7 @@
 import React, { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import Header from '../components/header'
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const [products, setProducts] = useState([])
@@ -90,7 +91,7 @@ const Home = () => {
               Grab Upto 50% Off on<br />Selected Headphone
             </h1>
            <button className="bg-white text-indigo-700 font-semibold px-6 py-3 rounded-full shadow-md hover:scale-105 hover:bg-indigo-100 transition duration-300">
-              Buy Now
+              <Link to="/shop">Buy Now</Link>
             </button> 
           </div>
 
@@ -131,10 +132,10 @@ const Home = () => {
               <div className="text-lg font-bold mt-1">
                 <span>{item.price}$ </span>
                 <span className="line-through text-gray-300 text-sm">344$</span>
-              </div>
-              <button className="mt-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-5 py-2 rounded-full shadow hover:scale-105 hover:shadow-md transition-all">
-                Add To Cart
-              </button>
+              </div> 
+              <button className="bg-white mt-2 text-indigo-700 font-semibold px-6 py-3 rounded-full shadow-md hover:scale-105 hover:bg-indigo-100 transition duration-300">
+              <Link to="/shop">Buy Now</Link>
+            </button> 
             </motion.div>
           ))}
         </div>
