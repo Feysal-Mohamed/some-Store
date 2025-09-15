@@ -4,6 +4,7 @@ const cors = require("cors");
 const router = require("./router/ProductRouter");
 const customerRouter = require("./router/customerRouter");
 // const orderRouter = require("./postRouter/orderRouter");
+const postRoutes = require("./router/postRouter");
 require("dotenv").config();
 
 const app = express();
@@ -24,6 +25,7 @@ app.use("/AlImages", express.static("imageDocuments"));
 // Use routes
 app.use(router);
 app.use(customerRouter);
+app.use(postRoutes);
 // app.use(orderRouter);
 
 // Connect to MongoDB
