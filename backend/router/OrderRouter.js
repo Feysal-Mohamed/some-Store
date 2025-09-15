@@ -1,6 +1,6 @@
 
 const express=require("express")
-const Order = require("../model/OrderModel")
+const Order = require("../Models/orderModel")
 const orderCroller=require("../controller/orderControler")
 const orderRouter=express.Router()
 
