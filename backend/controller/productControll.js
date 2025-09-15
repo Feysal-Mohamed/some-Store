@@ -1,4 +1,4 @@
-const product=require("../model/product")
+const product=require("../Models/productModel")
 
 const createProduct=async(req,res)=>{
   
