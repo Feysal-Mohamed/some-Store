@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const router = require("./router/ProductRouter");
-// const customerouter = require("./postRouter/customerRouter");
+const customerRouter = require("./router/customerRouter");
 // const orderRouter = require("./postRouter/orderRouter");
 require("dotenv").config();
 
@@ -23,7 +23,7 @@ app.use("/AlImages", express.static("imageDocuments"));
 
 // Use routes
 app.use(router);
-// app.use(customerouter);
+app.use(customerRouter);
 // app.use(orderRouter);
 
 // Connect to MongoDB
