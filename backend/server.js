@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const router = require("./router/ProductRouter");
 const customerRouter = require("./router/customerRouter");
+const orderRoter = require("./router/OrderRouter");
 // const orderRouter = require("./postRouter/orderRouter");
 const postRoutes = require("./router/postRouter");
 require("dotenv").config();
@@ -26,6 +27,7 @@ app.use("/AlImages", express.static("imageDocuments"));
 app.use(router);
 app.use(customerRouter);
 app.use(postRoutes);
+app.use(orderRoter);
 // app.use(orderRouter);
 
 // Connect to MongoDB

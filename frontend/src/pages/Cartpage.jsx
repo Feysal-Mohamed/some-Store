@@ -1,118 +1,199 @@
-import React, { useEffect, useState } from 'react'
-import Header from '../components/header'
-// import product from '../../../backend/model/product'
+import React, { useEffect, useState } from "react";
+import Header from "../components/header";
+import axios from "axios";
 
 const CartPage = () => {
-    const [productCArt,setProducrCart]=useState([])
-    console.log(productCArt)
-    useEffect(()=>{
-        const getData=JSON.parse(localStorage.getItem("readData"))
-        setProducrCart(getData)
-        const update=getData.map(item => ({
-            ...item, quantity : 1, maxQuantity : item.quantity
-        }))
-        setProducrCart(update)
-    },[])
-   
+  const [cart, setCart] = useState([]);
 
-    const totalPrice=productCArt.reduce((add ,item) =>add +(Number(item.price * item.quantity)),0)
+  // Load cart from localStorage
+  useEffect(() => {
+    const storedCart = JSON.parse(localStorage.getItem("readData")) || [];
+    const updatedCart = storedCart.map((item) => ({
+      ...item,
+      quantity: 1,
+      maxQuantity: item.quantity, // max available stock
+    }));
+    setCart(updatedCart);
+  }, []);
 
-    const handleDeleteItem=(id)=>{
-        const removeItem=productCArt.filter((items)=> items._id !== id)
-        localStorage.setItem("readData", JSON.stringify(removeItem))
-        setProducrCart(removeItem)
+  // Calculate total price
+  const totalPrice = cart.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
+
+  // Increment quantity
+  const handleIncrement = (id) => {
+    setCart((prev) =>
+      prev.map((item) =>
+        item._id === id
+          ? {
+              ...item,
+              quantity:
+                item.quantity < item.maxQuantity
+                  ? item.quantity + 1
+                  : item.maxQuantity,
+            }
+          : item
+      )
+    );
+  };
+
+  // Decrement quantity
+  const handleDecrement = (id) => {
+    setCart((prev) =>
+      prev.map((item) =>
+        item._id === id
+          ? { ...item, quantity: item.quantity > 1 ? item.quantity - 1 : 1 }
+          : item
+      )
+    );
+  };
+
+  // Remove item
+  const handleRemove = (id) => {
+    const updated = cart.filter((item) => item._id !== id);
+    localStorage.setItem("readData", JSON.stringify(updated));
+    setCart(updated);
+  };
+
+  // Checkout / Place order
+  const handleCheckout = async () => {
+    if (cart.length === 0) return alert("Your cart is empty!");
+
+    try {
+      const orderData = cart.map((item) => ({
+        ProductId: item._id,
+        quantity: item.quantity,
+      }));
+
+      const customerName = localStorage.getItem("userName") || "Guest";
+
+      const response = await axios.post(
+        "http://localhost:7000/create/order",
+        {
+          Customers: customerName,
+          product: orderData,
+        }
+      );
+
+      alert("Order placed successfully!");
+      localStorage.removeItem("readData");
+      setCart([]);
+      console.log(response.data);
+    } catch (err) {
+      console.error(err.response?.data || err.message);
+      alert("Error placing order");
     }
-    const HandleIncrement=(id)=>{
-        setProducrCart(prd => prd.map(
-            item => item._id === id ? {...item,quantity: item.quantity < item.maxQuantity ? item.quantity +1 : item.maxQuantity}: item
-        ))
-    }
-      const HandleDecrement=(id)=>{
-        setProducrCart(prd => prd.map(
-            
-            item => item._id === id  ? {...item,quantity  : item.quantity > 1 ? item.quantity -1 : item.quantity}: item
-        ))
-    }
+  };
 
   return (
-    <div>
-        <div><Header /></div>
-        <div>
-            <h1 className='pl-20 text-3xl font-bold mt-4 underline underline-offset-4 decoration-orange-600'>Shping Cart</h1>
-        </div>
-        <div className='px-20  py-10 flex space-x-10 mt-10 shadow-2xl mx-4 rounded-lg'>
-            <div>
+    <div className="min-h-screen bg-gray-100 flex flex-col">
+      <Header />
 
-            <table>
-                <thead>
-                    <tr className='text-left'>
-                        <th className='pr-24'>Product Details</th>
-                        <th className='pr-24'>Price</th>
-                        <th className='pr-24'>Quantity</th>
-                        <th className='pr-24'>Total</th>
-                    </tr>
-                </thead>
-                {productCArt.length <1? <h1>Notfound data</h1>:
-                    productCArt.map((items)=>{
-                        return(<>
-                            <tbody>
-                                <tr className=''>
-                                    <td className='pr-24'>
-                                        <div className='flex space-x-4'>
-                                            <div>
-                                                <img className='w-[110px] rounded-lg' src={`http://localhost:7000/AlImages/${items.prImg}`} alt="" />
-                                            </div>
-                                            <div className='space-y-1 font-bold'> 
-                                                <h1 className='truncate w-[150px] font-bold'>{items.name}</h1>
-                                                <h1>{items.desc}</h1>
-                                                <h onClick={()=> handleDeleteItem (items._id)} className='text-red-500'>Remove</h>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td className='pr-24'>
-                                        <div className='flex space-x-2'>
-                                            <button  onClick={()=> HandleDecrement(items._id)} className='bg-gray-200 px-2 rounded-sm '>-</button>
-                                            <h1>{items.quantity}</h1>
-                                            <button onClick={()=> HandleIncrement(items._id)} className='bg-gray-200 px-2 rounded-sm '>+</button>
-                                        </div>
-                                    </td>
-                                    <td className='pr-24'>${items.price }</td>
-                                    <td className='pr-24'>${items.price * items.quantity}</td>
-                                </tr>
-                            </tbody>
-                        
-                        
-                        </>)
-                    })
-                }
+      {/* Main content */}
+      <div className="flex-1 px-4 py-10 max-w-7xl mx-auto w-full">
+        <h1 className="text-4xl font-bold mb-8 text-center text-orange-600">
+          Shopping Cart
+        </h1>
+
+        {cart.length === 0 ? (
+          <h2 className="text-xl text-center text-gray-500">
+            Your cart is empty
+          </h2>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-white rounded-xl shadow-lg">
+              <thead className="bg-gray-200">
+                <tr>
+                  <th className="text-left px-6 py-3">Product</th>
+                  <th className="text-left px-6 py-3">Price</th>
+                  <th className="text-left px-6 py-3">Quantity</th>
+                  <th className="text-left px-6 py-3">Total</th>
+                  <th className="text-left px-6 py-3">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {cart.map((item) => (
+                  <tr key={item._id} className="border-b border-gray-200">
+                    <td className="px-6 py-4 flex items-center space-x-4">
+                      <img
+                        src={`http://localhost:7000/AlImages/${item.prImg}`}
+                        alt={item.name}
+                        className="w-20 h-20 object-cover rounded-lg"
+                      />
+                      <div>
+                        <h3 className="font-semibold">{item.name}</h3>
+                        <p className="text-gray-500 text-sm truncate w-60">
+                          {item.desc}
+                        </p>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">${item.price}</td>
+                    <td className="px-6 py-4 flex items-center space-x-2">
+                      <button
+                        onClick={() => handleDecrement(item._id)}
+                        className="px-2 py-1 bg-gray-200 rounded"
+                      >
+                        -
+                      </button>
+                      <span>{item.quantity}</span>
+                      <button
+                        onClick={() => handleIncrement(item._id)}
+                        className="px-2 py-1 bg-gray-200 rounded"
+                      >
+                        +
+                      </button>
+                    </td>
+                    <td className="px-6 py-4">
+                      ${item.price * item.quantity}
+                    </td>
+                    <td className="px-6 py-4">
+                      <button
+                        onClick={() => handleRemove(item._id)}
+                        className="text-red-500 font-semibold hover:underline"
+                      >
+                        Remove
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
             </table>
-            </div>
+          </div>
+        )}
+      </div>
 
-            <div className='shadow-2xl w-[400px] px-4 space-y-5 py-4'>
-            <h1 className=' text-3xl font-bold mt-4 underline underline-offset-4 decoration-orange-600'>Other Sumery</h1>
-            <div className='flex justify-between text-xl text-gray-500 '><h1>ITEMS</h1><h1>{productCArt.length}</h1></div>
-            <h1 className='text-gray-500 text-xl'>SHIPING</h1>
-            <select className='border-2 border-black w-full ' name="" id="">
-                <option value="">GOOGLE</option>
-            </select>
-            <h1 className='text-gray-500 text-xl'>PROMO CODE</h1>
-            <div className='flex space-x-3'>
-            <input type="text" className='border-2 pl-2 border-black w-full' placeholder='Enter Code' />
-            <button className='bg-red-500 py-2 px-2'>APPLY</button>
-            </div>
-            <hr className='border-black' />
-            <div className='flex justify-between'>
-            <h1 className='text-black-500 font-bold text-xl'>TOTAL COST</h1>
-            <h1 className='text-black-500 font-bold text-xl'>${totalPrice}</h1>
-
-            </div>
-            <button className='bg-purple-700 w-full text-white py-2'>CHECKOUT</button>
-
-            </div>
+      {/* Checkout summary fixed at bottom */}
+      <div className="bg-white shadow-lg p-6 w-full flex flex-col lg:flex-row justify-between items-center space-y-4 lg:space-y-0 lg:space-x-6 fixed bottom-0 left-0 right-0">
+        <div className="flex flex-col lg:flex-row gap-4 items-center">
+          <span className="font-semibold">Items: {cart.length}</span>
+          <span className="font-semibold">Shipping: $10.00</span>
+          <div className="flex gap-2 items-center">
+            <input
+              type="text"
+              placeholder="Promo code"
+              className="border px-2 py-1 rounded"
+            />
+            <button className="bg-red-500 text-white px-4 py-1 rounded">
+              Apply
+            </button>
+          </div>
         </div>
-      
+        <div className="flex gap-4 items-center">
+          <span className="text-xl font-bold">
+            Total: ${totalPrice + 10}
+          </span>
+          <button
+            onClick={handleCheckout}
+            className="bg-purple-700 text-white px-6 py-3 rounded-xl hover:bg-purple-800 transition"
+          >
+            Checkout
+          </button>
+        </div>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default CartPage
+export default CartPage;
