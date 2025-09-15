@@ -11,5 +11,4 @@ customerRouter.post("/login/Customer", customerController.loginUser);
 // Admin routes
 customerRouter.get("/read/all", auth, adminOnly, customerController.getAllUsers);
 customerRouter.put("/makeAdmin/:userId", auth, adminOnly, customerController.makeAdmin);
-
 module.exports = customerRouter;
