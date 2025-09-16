@@ -1,59 +1,87 @@
-import React, { useState } from 'react'
-import { useEffect } from 'react';
-import Header from '../components/header';
+import React, { useState, useEffect } from "react";
+import Header from "../components/header";
+import { FaCheck } from "react-icons/fa";
 
 const Shop = () => {
-      const [products, setProducts] = useState([]);
-        const handleLocalStore=(data)=>{
-    
-    const newData=JSON.parse(localStorage.getItem("readData")) || []
+  const [products, setProducts] = useState([]);
+  const [cartItems, setCartItems] = useState(
+    JSON.parse(localStorage.getItem("readData")) || []
+  );
 
-    const existId=newData.some((item)=> item._id === data._id)
-    if(!existId){
-      newData.push(data)
-      localStorage.setItem("readData", JSON.stringify(newData))
+  const handleLocalStore = (data) => {
+    const newData = [...cartItems];
+    const existId = newData.some((item) => item._id === data._id);
 
+    if (!existId) {
+      newData.push(data);
+      localStorage.setItem("readData", JSON.stringify(newData));
+      setCartItems(newData); // update state live
     }
-  }
-    
-     useEffect(() => {
-        fetch("http://localhost:7000/read/product")
-          .then((res) => res.json())
-          .then((data) => {
-            setProducts(data);
-          })
-          .catch((err) => console.error("Error fetching products:", err));
-      }, []);
+  };
+
+  useEffect(() => {
+    fetch("http://localhost:7000/read/product")
+      .then((res) => res.json())
+      .then((data) => {
+        setProducts(data);
+      })
+      .catch((err) => console.error("Error fetching products:", err));
+  }, []);
+
   return (
     <>
-        <Header />
+      <Header />
 
-    <div className='px-20'>
-         <div className='flex gap-3'>
+      <div className="px-20">
+        <div className="flex gap-3 flex-wrap">
+          {products.map((items) => {
+            const isInCart = cartItems.some((p) => p._id === items._id);
 
-       
-      {
-        products.map((items)=>{
-          return(<>
-          <div className='w-[300px] space-y-4 py-2 px-3 rounded-lg border-2'>
-              <img
-                className='rounded-xl'
+            return (
+              <div
                 key={items._id}
-                src={`http://localhost:7000/AlImages/${items.prImg}`}
-                alt={items.name}
-              />
-            <h1>{items.name}</h1>
-            <h1><span>{items.status}</span><span>{items.quantity}</span></h1>
-            <h1><span>{items.price}$</span><span className='line-through text-gray-300'>344$</span></h1>
-              <button onClick={()=>handleLocalStore(items)} >Add To Cart</button>
-       </div>
-            </>)
-        })
-      }
-      </div>
-    </div>
-    </>
-  )
-}
+                className="w-[300px] space-y-4 py-2 px-3 rounded-lg border-2"
+              >
+                <img
+                  className="rounded-xl"
+                  src={`http://localhost:7000/AlImages/${items.prImg}`}
+                  alt={items.name}
+                />
+                <h1>{items.name}</h1>
+                <h1>
+                  <span>{items.status}</span>
+                  <span>{items.quantity}</span>
+                </h1>
+                <div>
+                  <h1>
+                    <span>{items.price}$</span>
+                    <span className="line-through text-gray-300">344$</span>
+                  </h1>
 
-export default Shop
+                  <button
+                    onClick={() => handleLocalStore(items)}
+                    className={`px-4 py-2 rounded-lg font-semibold transition ${
+                      isInCart
+                        ? "bg-blue-600 text-white flex items-center gap-2"
+                        : "bg-gray-200 hover:bg-gray-300"
+                    }`}
+                  >
+                    {isInCart ? (
+                      <>
+                        <FaCheck /> Added
+                      </>
+                    ) : (
+                      "Add To Cart"
+                    )}
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default Shop;
