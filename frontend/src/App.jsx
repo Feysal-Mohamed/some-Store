@@ -14,6 +14,7 @@ import ProtectedRoute from './components/protect'
 import CartPage from './pages/Cartpage'
 import Orders from './dashbord/Orders'
 import MyDelivery from './pages/myDelivery'
+import DetailsBlog from './pages/detailsblog'
 
 const App = () => {
   return (
@@ -59,6 +60,7 @@ const App = () => {
       <Route path='/Register' element={<RegisterForm />} />
       <Route path='/login' element={<LoginForm />} />
       <Route path='/myDelivery' element={<MyDelivery />} />
+      <Route path='/post/:id' element={<DetailsBlog />} />
     </Routes>
     </div>
   )
