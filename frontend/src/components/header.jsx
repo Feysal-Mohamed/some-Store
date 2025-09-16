@@ -161,6 +161,14 @@ const Header = () => {
                 <i className="fa-solid fa-cart-shopping text-lg"></i>
               </NavLink>
 
+              {/* My Delivery */}
+              <NavLink
+                to="/myDelivery"
+                className="text-gray-200 hover:text-green-400 transition-colors duration-300"
+              >
+                <i className="fa-solid fa-truck text-lg mr-1"></i> My Delivery
+              </NavLink>
+
               {/* User badge */}
               <div className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-700 text-white font-bold uppercase shadow">
                 {firstName}

@@ -64,15 +64,23 @@ const CartPage = () => {
     try {
       const orderData = cart.map((item) => ({
         ProductId: item._id,
+        name: item.name,
+        price: item.price,
+        prImg: item.prImg,
         quantity: item.quantity,
       }));
 
-      const customerName = localStorage.getItem("userName") || "Guest";
+      const loggedInUser = JSON.parse(localStorage.getItem("LoggedInUser")) || {};
+      const customerName = loggedInUser.Name || "Guest";
+      const customerEmail = loggedInUser.Email || "";
+      const customerPhone = loggedInUser.Phone || "";
 
       const response = await axios.post(
         "http://localhost:7000/create/order",
         {
           Customers: customerName,
+          customerEmail,
+          customerPhone,
           product: orderData,
         }
       );

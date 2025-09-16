@@ -11,7 +11,7 @@ const Dash = () => {
         <NavLink to="/prod"><h1><i className=" mr-2 fa-brands fa-product-hunt"></i>Products</h1></NavLink>
         <NavLink to="/Addpro"><h1><i className=" mr-2 fa-solid fa-plus"></i>Add Products</h1></NavLink>
         <NavLink to="/"><h1><i className=" mr-2 fa-solid fa-user"></i>Customers</h1></NavLink>
-        <NavLink to="/"><h1><i className=" mr-2 fa-solid fa-cart-shopping"></i>Add Orders</h1></NavLink>
+        <NavLink to="/Orde"><h1><i className=" mr-2 fa-solid fa-cart-shopping"></i>Add Orders</h1></NavLink>
         <NavLink to="/"><h1><i className=" mr-2 fa-regular fa-note-sticky"></i>Reports</h1></NavLink>
         <NavLink to="/"><h1><i className=" mr-2 fa-solid fa-gear"></i>Setings</h1></NavLink>
        

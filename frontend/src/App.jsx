@@ -12,6 +12,8 @@ import RegisterForm from './components/RegisterForm'
 import LoginForm from './components/LoginForm'
 import ProtectedRoute from './components/protect'
 import CartPage from './pages/Cartpage'
+import Orders from './dashbord/Orders'
+import MyDelivery from './pages/myDelivery'
 
 const App = () => {
   return (
@@ -46,8 +48,17 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+            <Route
+          path='/Orde'
+          element={
+            <ProtectedRoute adminOnly={true}>
+              <Orders />
+            </ProtectedRoute>
+          }
+        />
       <Route path='/Register' element={<RegisterForm />} />
       <Route path='/login' element={<LoginForm />} />
+      <Route path='/myDelivery' element={<MyDelivery />} />
     </Routes>
     </div>
   )
